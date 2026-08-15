@@ -1,0 +1,22 @@
+{
+  "config": {
+    "flow_title": "{name}",
+    "step": {
+      "user": {
+        "data": {
+          "address": "Endereço Bluetooth"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Falha na ligação",
+      "unknown": "Erro inesperado"
+    },
+    "abort": {
+      "not_supported": "Dispositivo não suportado",
+      "already_in_progress": "A configuração já está em curso",
+      "already_configured": "O dispositivo já está configurado",
+      "no_devices_found": "Não foram encontrados dispositivos na rede"
+    }
+  }
+}
