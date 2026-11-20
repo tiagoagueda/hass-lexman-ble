@@ -1,20 +1,27 @@
-# CLAUDE.md
+# AGENTS.md
 
-This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
+This file provides guidance to AI coding agents (Claude Code, Codex, etc.) when working with code in this repository.
 
 ## What this repo is
 
-A **self-contained Home Assistant custom integration** (HACS, category `integration`) for Lexman/Leroy Merlin CCT smart bulbs over Bluetooth LE. Everything shippable lives under [custom_components/lexman_ble/](custom_components/lexman_ble/); the rest of the repo is documentation.
+A **self-contained Home Assistant custom integration** (Home Assistant Marketplace — formerly HACS, built into Core since 2026.11 — category `integration`) for Lexman/Leroy Merlin CCT smart bulbs over Bluetooth LE. Everything shippable lives under [custom_components/lexman_ble/](custom_components/lexman_ble/); the rest of the repo is documentation.
 
-This is a **distribution-only repo**: there is no build system, no dependency manager, no test suite, no linters, no CI. Nothing here is installed or compiled — Home Assistant imports the files as they are. Do not add `poetry`/`uv`/`pytest` commands to docs or assume they exist; if you need that tooling, add it deliberately and update this file. The upstream project [davidsmfreire/lexman-ble](https://github.com/davidsmfreire/lexman-ble) still carries the full dev environment.
+This is a **distribution-only repo**: there is no build system, no dependency manager, no test suite, no linters, no CI. Nothing here is installed or compiled — Home Assistant imports the files as they are. Do not add `poetry`/`uv`/`pytest` commands to docs or assume they exist; if you need that tooling, add it deliberately and update this file (`AGENTS.md`). The upstream project [davidsmfreire/lexman-ble](https://github.com/davidsmfreire/lexman-ble) still carries the full dev environment.
 
-Git origin is a self-hosted forge (`source.tiagoagueda.com`); `github.com/tiagoagueda/hass-lexman-ble` is the public mirror and the URL HACS installs from, so all user-facing links in docs and `manifest.json` must point at GitHub.
+Git origin is a self-hosted forge (`source.tiagoagueda.com`); `github.com/tiagoagueda/hass-lexman-ble` is the public mirror and the URL the Marketplace installs from, so all user-facing links in docs and `manifest.json` must point at GitHub.
 
 ## Versioning & releases
 
-**Only one version number exists**: `version` in [manifest.json](custom_components/lexman_ble/manifest.json). Bump it by hand when you want HACS to offer users an update, and add a matching entry to [CHANGELOG.md](CHANGELOG.md). HACS picks the new version up from a GitHub release (or the default branch).
+**Only one version number exists**: `version` in [manifest.json](custom_components/lexman_ble/manifest.json). Bump it by hand when you want the Marketplace to offer users an update, and add a matching entry to [CHANGELOG.md](CHANGELOG.md). The Marketplace picks the new version up from a **published** GitHub release (a bare tag is not enough; without releases it falls back to the default branch). `version` must match the release tag.
 
 The BLE library is **vendored**, not a dependency — editing it takes effect for users on the next integration update, with no publish step. The only third-party runtime requirement is `parse` (declared in `manifest.json` `requirements`). Home Assistant's Bluetooth stack already provides `bleak`, `bleak-retry-connector` and `bluetooth-data-tools`, so those are **not** redeclared.
+
+## Marketplace / hassfest compliance
+
+- `manifest.json` keys: `domain`, `name`, then the rest **alphabetically** (hassfest enforces this). Do **not** put `homeassistant` in `manifest.json` — the custom-integration schema rejects it; the minimum HA version lives in [hacs.json](hacs.json).
+- `categories` (`lighting.bulbs_lamps`) is required by the Marketplace validator.
+- Brand images live in [brand/](custom_components/lexman_ble/brand/) (`icon.png` 256×256, `@2x` 512×512, `logo.png`); [images/](images/) holds the copies the README uses.
+- The GitHub mirror needs a description, topics and issues enabled for the Marketplace checks.
 
 ## Library architecture (vendored: `custom_components/lexman_ble/lexman_ble/`)
 

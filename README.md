@@ -43,7 +43,7 @@ RGB bulbs are **not** supported — only the CCT (white-tuning) models.
 
 ## Requirements
 
-- Home Assistant **2025.1.0** or newer.
+- Home Assistant **2025.2.0** or newer (tested up to 2026.11).
 - A working Bluetooth adapter with the
   [Bluetooth integration](https://www.home-assistant.io/integrations/bluetooth/)
   set up. An [ESPHome Bluetooth proxy](https://esphome.io/projects/?type=bluetooth)
@@ -51,7 +51,17 @@ RGB bulbs are **not** supported — only the CCT (white-tuning) models.
 
 ## Installation
 
-### HACS (recommended)
+### Marketplace (Home Assistant 2026.11+, recommended)
+
+Since 2026.11, HACS is built into Home Assistant as **Settings → Marketplace**.
+
+1. Open **Settings → Marketplace → Add from link**.
+2. Enter `tiagoagueda/hass-lexman-ble` (or the full GitHub URL).
+3. Install **LexmanBLE** and restart Home Assistant.
+
+Installs made through HACS are migrated to the Marketplace automatically on upgrade.
+
+### HACS (Home Assistant before 2026.11)
 
 [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.][hacs-repo-shield]][hacs-repo]
 

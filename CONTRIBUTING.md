@@ -32,7 +32,8 @@ no linters, no CI. Home Assistant loads the files as they are.
 ```text
 custom_components/lexman_ble/          # the integration (HA-facing code)
 custom_components/lexman_ble/lexman_ble/   # vendored BLE device library
-hacs.json                              # HACS metadata
+custom_components/lexman_ble/brand/    # icon/logo shown by HA and the Marketplace
+hacs.json                              # Marketplace (formerly HACS) metadata
 ```
 
 Keep the BLE wire protocol inside the vendored library and keep Home Assistant
@@ -57,7 +58,7 @@ There is no automated test suite. To verify a change by hand:
 
 1. Bump `version` in [`custom_components/lexman_ble/manifest.json`](custom_components/lexman_ble/manifest.json).
 2. Move the `## [Unreleased]` entries into a new dated version section in `CHANGELOG.md`.
-3. Tag and publish a GitHub release on the mirror — HACS offers the update from there.
+3. Tag and publish a GitHub release on the mirror — the Marketplace (formerly HACS) offers the update from there.
 
 ## License
 

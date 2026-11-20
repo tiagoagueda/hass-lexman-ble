@@ -6,9 +6,30 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 The version that matters to users is the `version` field in
 [`custom_components/lexman_ble/manifest.json`](custom_components/lexman_ble/manifest.json) —
-that is what HACS reads to offer an update.
+that is what the Marketplace (formerly HACS) reads to offer an update.
 
 ## [Unreleased]
+
+## [0.3.0] - 2026-11-20
+
+### Added
+
+- Brand images in `custom_components/lexman_ble/brand/` (icon and logo, light
+  and @2x), as used by Home Assistant 2026.3+ and the Marketplace.
+- `categories: ["lighting.bulbs_lamps"]` in `manifest.json` for the Marketplace.
+
+### Changed
+
+- Checked against Home Assistant 2026.11 and its built-in Marketplace (formerly
+  HACS); README now documents installing from the Marketplace.
+- Minimum Home Assistant version raised to 2025.2.0 (`hacs.json`); the light
+  platform now uses `AddConfigEntryEntitiesCallback`.
+- `CLAUDE.md` renamed to `AGENTS.md`.
+
+### Fixed
+
+- Removed the invalid `homeassistant` key from `manifest.json` (the minimum
+  version lives in `hacs.json`) and sorted manifest keys as hassfest requires.
 
 ## [0.2.0] - 2026-08-15
 
@@ -56,7 +77,8 @@ this integration is forked. See its
 [CHANGELOG](https://github.com/davidsmfreire/lexman-ble/blob/main/CHANGELOG.md)
 for the per-commit history of that period.
 
-[unreleased]: https://github.com/tiagoagueda/hass-lexman-ble/compare/v0.2.0...HEAD
+[unreleased]: https://github.com/tiagoagueda/hass-lexman-ble/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/tiagoagueda/hass-lexman-ble/releases/tag/v0.3.0
 [0.2.0]: https://github.com/tiagoagueda/hass-lexman-ble/releases/tag/v0.2.0
 [0.1.1]: https://github.com/tiagoagueda/hass-lexman-ble/releases/tag/v0.1.1
 [0.1.0]: https://github.com/tiagoagueda/hass-lexman-ble/releases/tag/v0.1.0
