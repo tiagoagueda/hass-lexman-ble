@@ -6,7 +6,9 @@ This file provides guidance to AI coding agents (Claude Code, Codex, etc.) when 
 
 A **self-contained Home Assistant custom integration** (Home Assistant Marketplace — formerly HACS, built into Core since 2026.11 — category `integration`) for Lexman/Leroy Merlin CCT smart bulbs over Bluetooth LE. Everything shippable lives under [custom_components/lexman_ble/](custom_components/lexman_ble/); the rest of the repo is documentation.
 
-This is a **distribution-only repo**: there is no build system, no dependency manager, no test suite, no linters, no CI. Nothing here is installed or compiled — Home Assistant imports the files as they are. Do not add `poetry`/`uv`/`pytest` commands to docs or assume they exist; if you need that tooling, add it deliberately and update this file (`AGENTS.md`). The upstream project [davidsmfreire/lexman-ble](https://github.com/davidsmfreire/lexman-ble) still carries the full dev environment.
+This is a **distribution-only repo**: there is no build system or dependency manager. Nothing here is installed or compiled — Home Assistant imports the files as they are. Do not add `poetry`/`uv` commands to docs or assume they exist; if you need that tooling, add it deliberately and update this file (`AGENTS.md`). The upstream project [davidsmfreire/lexman-ble](https://github.com/davidsmfreire/lexman-ble) still carries the full dev environment.
+
+Dev tooling used by Forgejo CI (`ruff`, `pytest`, `hassfest`) is declared in `requirements-dev.txt` and is **not** shipped to users — it is only used by CI and contributors. See the Continuous integration section below.
 
 Git origin is a self-hosted forge (`source.tiagoagueda.com`); `github.com/tiagoagueda/hass-lexman-ble` is the public mirror and the URL the Marketplace installs from, so all user-facing links in docs and `manifest.json` must point at GitHub.
 
@@ -53,5 +55,25 @@ Standard modern HA BLE config-entry integration. Note two `const.py`/`models.py`
 ## Conventions
 
 - Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/). Nothing enforces or automates this here — it is stylistic.
-- Code style is `ruff`-formatted (88 cols, double quotes) to match upstream, even though no formatter runs in this repo.
+- Code style is `ruff`-formatted (88 cols, double quotes) to match upstream; `ruff check` and `ruff format --check` run in Forgejo CI.
 - When extending: keep the BLE wire protocol in the vendored library, keep HA imports out of it, bump `manifest.json` `version` and update `CHANGELOG.md` to release.
+
+## Continuous integration
+
+Forgejo CI runs on every push and pull request to `main` (`.forgejo/workflows/ci.yml`):
+
+1. **lint** — `ruff check` and `ruff format --check` on the integration and tests.
+2. **test** — `pytest` against `tests/` (pure logic: hex formatting/parsing, command matching, temperature/brightness conversions — no BLE hardware required).
+3. **hassfest** — Home Assistant Marketplace validator (`hassfest`) on `custom_components/lexman_ble`; this job is **blocking** because it enforces `manifest.json` key ordering, `strings.json`/`translations` consistency and Marketplace compliance.
+
+Locally, you can run the CI-equivalent checks with:
+
+```sh
+pip install -r requirements-dev.txt
+ruff check custom_components/lexman_ble tests
+ruff format --check custom_components/lexman_ble tests
+pytest -v tests
+hassfest --integration-path custom_components/lexman_ble
+```
+
+Tests live in `tests/` and exercise only the vendored library's pure-logic functions — no real BLE device is needed.

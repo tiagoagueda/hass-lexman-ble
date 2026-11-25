@@ -1,0 +1,13 @@
+# Development tooling for the Lexman BLE custom integration.
+# This repo ships no build system; these pins are only used by Forgejo CI
+# (and by contributors who want to run lint/tests locally).
+ruff~=0.9.0
+pytest~=8.3.0
+
+# Test-only dependencies: the vendored library imports bleak/bleak-retry-connector
+# at module import time. Home Assistant provides these at runtime; CI installs
+# them so the library can be imported for unit testing.
+bleak>=3.0.0
+bleak-retry-connector>=3.0.0
+bluetooth-data-tools
+parse~=1.20.2
