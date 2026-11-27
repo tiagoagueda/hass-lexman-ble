@@ -21,13 +21,17 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          # Match Home Assistant's runtime (2026.11 requires 3.14).
+          python-version: "3.14"
           cache: pip
+          # No requirements.txt/pyproject.toml here; without this the cache
+          # lookup fails the step.
+          cache-dependency-path: requirements-dev.txt
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install ruff
+          pip install -r requirements-dev.txt
 
       - name: Run ruff check
         run: ruff check custom_components/lexman_ble tests
@@ -45,8 +49,9 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: "3.x"
+          python-version: "3.14"
           cache: pip
+          cache-dependency-path: requirements-dev.txt
 
       - name: Install dependencies
         run: |
@@ -63,16 +68,7 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: "3.x"
-          cache: pip
-
-      - name: Install hassfest from Home Assistant script source
-        run: |
-          python -m pip install --upgrade pip
-          pip install git+https://github.com/home-assistant/script.git#subdirectory=script/hassfest
-
-      - name: Run hassfest on the integration
-        run: hassfest --integration-path custom_components/lexman_ble
+      # hassfest ships inside Home Assistant Core (script/hassfest), not as a
+      # pip package; the official Docker action runs it against the checkout.
+      - name: Run hassfest
+        uses: https://github.com/home-assistant/actions/hassfest@master

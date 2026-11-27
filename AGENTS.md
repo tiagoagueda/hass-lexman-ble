@@ -8,7 +8,7 @@ A **self-contained Home Assistant custom integration** (Home Assistant Marketpla
 
 This is a **distribution-only repo**: there is no build system or dependency manager. Nothing here is installed or compiled — Home Assistant imports the files as they are. Do not add `poetry`/`uv` commands to docs or assume they exist; if you need that tooling, add it deliberately and update this file (`AGENTS.md`). The upstream project [davidsmfreire/lexman-ble](https://github.com/davidsmfreire/lexman-ble) still carries the full dev environment.
 
-Dev tooling used by Forgejo CI (`ruff`, `pytest`, `hassfest`) is declared in `requirements-dev.txt` and is **not** shipped to users — it is only used by CI and contributors. See the Continuous integration section below.
+Dev tooling used by Forgejo CI (`ruff`, `pytest`) is declared in `requirements-dev.txt` (hassfest runs as a Docker action) and is **not** shipped to users — it is only used by CI and contributors. See the Continuous integration section below.
 
 Git origin is a self-hosted forge (`source.tiagoagueda.com`); `github.com/tiagoagueda/hass-lexman-ble` is the public mirror and the URL the Marketplace installs from, so all user-facing links in docs and `manifest.json` must point at GitHub.
 
@@ -64,7 +64,7 @@ Forgejo CI runs on every push and pull request to `main` (`.forgejo/workflows/ci
 
 1. **lint** — `ruff check` and `ruff format --check` on the integration and tests.
 2. **test** — `pytest` against `tests/` (pure logic: hex formatting/parsing, command matching, temperature/brightness conversions — no BLE hardware required).
-3. **hassfest** — Home Assistant Marketplace validator (`hassfest`) on `custom_components/lexman_ble`; this job is **blocking** because it enforces `manifest.json` key ordering, `strings.json`/`translations` consistency and Marketplace compliance.
+3. **hassfest** — Home Assistant's `hassfest` validator, run via the official `home-assistant/actions/hassfest` Docker action (hassfest is part of Core, not a pip package); this job is **blocking** because it enforces `manifest.json` key ordering, `strings.json`/`translations` consistency and Marketplace compliance.
 
 Locally, you can run the CI-equivalent checks with:
 
@@ -73,7 +73,7 @@ pip install -r requirements-dev.txt
 ruff check custom_components/lexman_ble tests
 ruff format --check custom_components/lexman_ble tests
 pytest -v tests
-hassfest --integration-path custom_components/lexman_ble
+docker run --rm -v "$PWD":/github/workspace ghcr.io/home-assistant/hassfest
 ```
 
 Tests live in `tests/` and exercise only the vendored library's pure-logic functions — no real BLE device is needed.
