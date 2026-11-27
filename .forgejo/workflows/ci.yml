@@ -64,11 +64,19 @@ jobs:
   hassfest:
     name: Validate with hassfest
     runs-on: ubuntu-latest
+    # hassfest ships inside Home Assistant Core (script/hassfest), not as a pip
+    # package. The official home-assistant/actions/hassfest action shells out
+    # to `docker run`, which needs a Docker socket the runner's job containers
+    # don't have, so run the job inside the same image instead.
+    container:
+      image: ghcr.io/home-assistant/hassfest:latest
     steps:
+      # The image is Alpine without Node/git, which actions/checkout needs.
+      - name: Install checkout prerequisites
+        run: apk add --no-cache nodejs git
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      # hassfest ships inside Home Assistant Core (script/hassfest), not as a
-      # pip package; the official Docker action runs it against the checkout.
       - name: Run hassfest
-        uses: https://github.com/home-assistant/actions/hassfest@master
+        run: /usr/src/homeassistant/script/hassfest/docker/entrypoint.sh
